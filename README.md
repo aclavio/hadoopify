@@ -27,3 +27,31 @@ function($result, $output) {
   (: $output contains the results of the previous reduce iterations :)
 }
 ```
+
+**Example:**
+A function that calculates the factorial of each input value and sums the results.
+```xquery
+xquery version "1.0-ml";
+import module namespace h = "http://marklogic.com/hadoopify" at "/hadoopify.xqy";
+
+h:hadoopify(
+  (: our input values :)
+  (1, 2, 3, 4, 5, 6),
+  (: factorial mapping function :)
+  function($num) {
+    let $total := 1
+    let $_ :=
+      for $i in (1 to $num)
+        return xdmp:set($total, $total * $i)
+    return $total
+  },
+  (: summing reduce function :)
+  function($result, $output) {    
+    (if ($output) then xs:integer($output) else 0) + xs:integer($result)
+  },
+  (: calculate each number individually :)
+  1,
+  (: this isn't an update function :)
+  fn:false()
+)
+```
