@@ -11,8 +11,8 @@ function is called individually for each item in that batch.  Once all processes
 have returned, an optional reduce function will be called on the result sequence.
 
 
-Mapping function:
-```
+**Mapping function:**
+```xquery
 function($item) {
   (: called on each item of the input sequence, returns a result or processing this item :)
   (: don't forget to commit! :)
@@ -20,9 +20,10 @@ function($item) {
 }
 ```
 
-Reduce function:
-```
+**Reduce function:**
+```xquery
 function($result, $output) {
-  (: called on the results of the mapping function, $output contains the results of the previous reduce iterations :)
+  (: called on the results of the mapping function :)
+  (: $output contains the results of the previous reduce iterations :)
 }
 ```
