@@ -16,8 +16,6 @@ declare option xdmp:mapping "false";
   Mapping function:
   function($item) {
     (: called on each item of the input sequence, returns a result or processing this item :)
-    (: don't forget to commit! :)
-    xdmp:commit()
   }
 
   Reduce function:
@@ -55,8 +53,13 @@ declare function h:hadoopify($data as item()*,
         xdmp:spawn-function(function(){
           (: xdmp:sleep(20000), text { "group #" || $group-num }, :)
           (: do the work on each individual item :)
-          for $d in $group-data
-            return $map-function($d)
+          let $result :=
+            for $d in $group-data
+              return $map-function($d)
+
+          let $commit := if ($is-update) then xdmp:commit() else ()
+
+          return $result
         }, 
         <options xmlns="xdmp:eval">
           <result>{fn:true()}</result>
